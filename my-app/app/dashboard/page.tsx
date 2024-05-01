@@ -1,5 +1,5 @@
-import DashHead from "@/components/DashHead";
-import DashMenu from "@/components/DashMenu";
+import DashMenu from "@/components/DashHead";
+import DashHead from "@/components/DashMenu";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";

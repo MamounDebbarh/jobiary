@@ -49,10 +49,10 @@ export default function Header() {
         </Link>
         {isSupabaseConnected && (
           <Link
-            href="/protected"
+            href="/dashboard"
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
-            Protected Page
+            Dashboard
           </Link>
         )}
       </nav>
@@ -93,10 +93,10 @@ export default function Header() {
             </Link>
             {isSupabaseConnected && (
               <Link
-                href="/protected"
+                href="/dashboard"
                 className="text-muted-foreground hover:text-foreground"
               >
-                Protected Page
+                Dashboard
               </Link>
             )}
           </nav>

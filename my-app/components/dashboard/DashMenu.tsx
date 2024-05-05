@@ -1,25 +1,25 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { createClient } from "@/utils/supabase/client";
+import { Home, LineChart, LoaderIcon, Plus, ShoppingCart } from "lucide-react";
+import Link from "next/link";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "../ui/button";
 import {
-  Dialog,
   DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
-import { createClient } from "@/utils/supabase/client";
-import { Home, LineChart, Plus, ShoppingCart } from "lucide-react";
-import Link from "next/link";
-import { useForm } from "react-hook-form";
-
-import { zodResolver } from "@hookform/resolvers/zod";
-
-import { useEffect, useState } from "react";
-import { z } from "zod";
+} from "../ui/dialog";
+import { Form, FormControl, FormField, FormItem } from "../ui/form";
+import { Input } from "../ui/input";
 
 const formSchema = z.object({
   funnel: z.string().min(2).max(50),
@@ -31,7 +31,25 @@ interface Funnel {
   // Add other properties here...
 }
 
-export default function DashMenu() {
+interface DashMenuProps {
+  setSheet: (sheet: string) => void;
+  sheet: string;
+}
+
+const DashMenu: React.FC<DashMenuProps> = ({ setSheet, sheet }) => {
+  const Dialog = dynamic(
+    () => import("../ui/dialog").then((mod) => mod.Dialog),
+    {
+      ssr: false, // This will load the component only on the client side
+      loading: () => (
+        <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
+          <LoaderIcon className="animate-spin h-4 w-4" />
+          <span className="sr-only">add a funnel</span>
+        </Button>
+      ), // Optional loading component
+    }
+  );
+
   const supabase = createClient();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -89,14 +107,20 @@ export default function DashMenu() {
     <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
       <Link
         href="#"
-        className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+        onClick={() => setSheet("goals")}
+        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
+          sheet === "goals" ? "text-primary" : "text-muted-foreground"
+        }`}
       >
         <Home className="h-4 w-4" />
         Goals
       </Link>
       <Link
         href="#"
-        className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+        onClick={() => setSheet("analytics")}
+        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
+          sheet === "analytics" ? "text-primary" : "text-muted-foreground"
+        }`}
       >
         <LineChart className="h-4 w-4" />
         Analytics
@@ -111,8 +135,11 @@ export default function DashMenu() {
           Funnels
         </Link>
         <Dialog>
-          <DialogTrigger className="ml-auto rounded-full">
-            <Plus />
+          <DialogTrigger>
+            <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
+              <Plus className="h-4 w-4" />
+              <span className="sr-only">add a funnel</span>
+            </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
@@ -150,7 +177,10 @@ export default function DashMenu() {
           <Link
             key={funnel.id}
             href="#"
-            className="w-full flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:text-primary"
+            onClick={() => setSheet(funnel.funnel)}
+            className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
+              sheet === funnel.funnel ? "text-primary" : "text-muted-foreground"
+            }`}
           >
             {funnel.funnel}
           </Link>
@@ -158,4 +188,6 @@ export default function DashMenu() {
       </div>
     </nav>
   );
-}
+};
+
+export default DashMenu;

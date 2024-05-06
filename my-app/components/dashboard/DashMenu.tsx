@@ -1,17 +1,17 @@
 "use client";
 import { Separator } from "@/components/ui/separator";
 import { createClient } from "@/utils/supabase/client";
-import { Home, LineChart, LoaderIcon, Plus, ShoppingCart } from "lucide-react";
+import { Home, LineChart, Plus, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "../ui/button";
 import {
+  Dialog,
   DialogClose,
   DialogContent,
   DialogHeader,
@@ -37,19 +37,6 @@ interface DashMenuProps {
 }
 
 const DashMenu: React.FC<DashMenuProps> = ({ setSheet, sheet }) => {
-  const Dialog = dynamic(
-    () => import("../ui/dialog").then((mod) => mod.Dialog),
-    {
-      ssr: false, // This will load the component only on the client side
-      loading: () => (
-        <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
-          <LoaderIcon className="animate-spin h-4 w-4" />
-          <span className="sr-only">add a funnel</span>
-        </Button>
-      ), // Optional loading component
-    }
-  );
-
   const supabase = createClient();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -135,7 +122,7 @@ const DashMenu: React.FC<DashMenuProps> = ({ setSheet, sheet }) => {
           Funnels
         </Link>
         <Dialog>
-          <DialogTrigger>
+          <DialogTrigger asChild>
             <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
               <Plus className="h-4 w-4" />
               <span className="sr-only">add a funnel</span>

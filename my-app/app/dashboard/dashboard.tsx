@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Bell, Menu, Package2 } from "lucide-react";
 
+import ClientAuthButton from "@/components/ClientAuthButton";
 import AnalyticsPage from "@/components/dashboard/analyticsPage";
 import GoalPage from "@/components/dashboard/goalPage";
 import Link from "next/link";
@@ -51,6 +52,9 @@ export default function DashboardPage() {
               <DashMenu setSheet={setSheet} sheet={sheet} />
             </SheetContent>
           </Sheet>
+          <div className="ml-auto">
+            <ClientAuthButton />
+          </div>
         </header>
 
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">

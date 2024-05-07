@@ -20,6 +20,7 @@ import {
 } from "../ui/dialog";
 import { Form, FormControl, FormField, FormItem } from "../ui/form";
 import { Input } from "../ui/input";
+import { Skeleton } from "../ui/skeleton";
 
 const formSchema = z.object({
   funnel: z.string().min(2).max(50),
@@ -37,6 +38,9 @@ interface DashMenuProps {
 }
 
 const DashMenu: React.FC<DashMenuProps> = ({ setSheet, sheet }) => {
+  const [funnels, setFunnels] = useState<Funnel[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   const supabase = createClient();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -45,8 +49,6 @@ const DashMenu: React.FC<DashMenuProps> = ({ setSheet, sheet }) => {
       funnel: "",
     },
   });
-
-  const [funnels, setFunnels] = useState<Funnel[]>([]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const user = (await supabase.auth.getUser()).data.user?.id;
@@ -88,6 +90,7 @@ const DashMenu: React.FC<DashMenuProps> = ({ setSheet, sheet }) => {
 
   useEffect(() => {
     fetchFunnels();
+    setIsLoading(false);
   }, []);
 
   return (
@@ -160,18 +163,28 @@ const DashMenu: React.FC<DashMenuProps> = ({ setSheet, sheet }) => {
       </div>
 
       <div className="ml-4 items-center gap-3 transition-all">
-        {funnels.map((funnel) => (
-          <Link
-            key={funnel.id}
-            href="#"
-            onClick={() => setSheet(funnel.funnel)}
-            className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
-              sheet === funnel.funnel ? "text-primary" : "text-muted-foreground"
-            }`}
-          >
-            {funnel.funnel}
-          </Link>
-        ))}
+        {isLoading ? (
+          <div className="space-y-3 mt-3 ml-3">
+            <Skeleton className="h-3 w-2/3" />
+            <Skeleton className="h-3 w-3/4" />
+            <Skeleton className="h-3 w-3/4" />
+          </div>
+        ) : (
+          funnels.map((funnel) => (
+            <Link
+              key={funnel.id}
+              href="#"
+              onClick={() => setSheet(funnel.funnel)}
+              className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
+                sheet === funnel.funnel
+                  ? "text-primary"
+                  : "text-muted-foreground"
+              }`}
+            >
+              {funnel.funnel}
+            </Link>
+          ))
+        )}
       </div>
     </nav>
   );

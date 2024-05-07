@@ -15,7 +15,7 @@ export default async function Dashboard() {
 
   return (
     <>
-      <DashboardPage />
+      <DashboardPage user={data.user} />
     </>
   );
 }

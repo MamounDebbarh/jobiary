@@ -1,8 +1,8 @@
 import { createClient } from "@/utils/supabase/server";
 import { Menu, Package2 } from "lucide-react";
 import Link from "next/link";
-import AuthButton from "./AuthButton";
-import { ModeToggle } from "./ModeToggle";
+import AuthButton from "./auth-button";
+import { ModeToggle } from "./mode-toggle";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 

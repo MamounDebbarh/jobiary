@@ -4,15 +4,20 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Bell, Menu, Package2 } from "lucide-react";
 
-import ClientAuthButton from "@/components/ClientAuthButton";
-import AnalyticsPage from "@/components/dashboard/analyticsPage";
-import GoalPage from "@/components/dashboard/goalPage";
+import ClientAuthButton from "@/components/dashboard/client-auth-button";
+import AnalyticsPage from "@/components/dashboard/analytics-page";
+import GoalPage from "@/components/dashboard/goal-page";
+import { User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { useState } from "react";
-import DashMenu from "../../components/dashboard/DashMenu";
-import FunnelPage from "../../components/funnel/funnelPage";
+import DashMenu from "../../components/dashboard/dashboard-menu";
+import FunnelPage from "../../components/funnel/funnel-page";
 
-export default function DashboardPage() {
+interface DashboardPageProps {
+  user: User;
+}
+
+export default function DashboardPage({ user }: DashboardPageProps) {
   const [sheet, setSheet] = useState("goals");
 
   return (
@@ -53,7 +58,7 @@ export default function DashboardPage() {
             </SheetContent>
           </Sheet>
           <div className="ml-auto">
-            <ClientAuthButton />
+            <ClientAuthButton user={user} />
           </div>
         </header>
 

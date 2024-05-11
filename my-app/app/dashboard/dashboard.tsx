@@ -5,8 +5,8 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Bell, Menu, Package2 } from "lucide-react";
 
 import ClientAuthButton from "@/components/dashboard/client-auth-button";
-import AnalyticsPage from "@/components/dashboard/analytics-page";
-import GoalPage from "@/components/dashboard/goal-page";
+import AnalyticsPage from "@/components/analytics/page";
+import GoalPage from "@/components/goal/page";
 import { User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { useState } from "react";

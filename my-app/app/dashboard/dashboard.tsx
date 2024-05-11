@@ -11,7 +11,7 @@ import { User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { useState } from "react";
 import DashMenu from "../../components/dashboard/dashboard-menu";
-import FunnelPage from "../../components/funnel/funnel-page";
+import FunnelPage from "../../components/funnel/page";
 
 interface DashboardPageProps {
   user: User;

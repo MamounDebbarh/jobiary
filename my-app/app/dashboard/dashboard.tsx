@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Bell, Menu, Package2 } from "lucide-react";
 
-import ClientAuthButton from "@/components/dashboard/client-auth-button";
 import AnalyticsPage from "@/components/analytics/page";
+import ClientAuthButton from "@/components/dashboard/client-auth-button";
 import GoalPage from "@/components/goal/page";
 import { User } from "@supabase/supabase-js";
 import Link from "next/link";
@@ -19,6 +19,7 @@ interface DashboardPageProps {
 
 export default function DashboardPage({ user }: DashboardPageProps) {
   const [sheet, setSheet] = useState("goals");
+  const [funnelID, setFunnelID] = useState<number>(0);
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
@@ -35,7 +36,12 @@ export default function DashboardPage({ user }: DashboardPageProps) {
             </Button>
           </div>
           <div className="flex-1">
-            <DashMenu setSheet={setSheet} sheet={sheet} />
+            <DashMenu
+              setSheet={setSheet}
+              setFunnelID={setFunnelID}
+              sheet={sheet}
+              user={user}
+            />
           </div>
         </div>
       </div>
@@ -54,7 +60,12 @@ export default function DashboardPage({ user }: DashboardPageProps) {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="flex flex-col">
-              <DashMenu setSheet={setSheet} sheet={sheet} />
+              <DashMenu
+                setSheet={setSheet}
+                setFunnelID={setFunnelID}
+                sheet={sheet}
+                user={user}
+              />
             </SheetContent>
           </Sheet>
           <div className="ml-auto">
@@ -68,7 +79,7 @@ export default function DashboardPage({ user }: DashboardPageProps) {
           ) : sheet === "analytics" ? (
             <AnalyticsPage />
           ) : (
-            <FunnelPage funnel={sheet} />
+            <FunnelPage selectedFunnel={sheet} funnelID={funnelID} />
           )}
         </main>
       </div>

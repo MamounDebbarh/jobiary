@@ -33,7 +33,11 @@ const formSchema = z.object({
   notes: z.string().max(100),
 });
 
-const JobForm = () => {
+interface JobFormProps {
+  funnelID: number;
+}
+
+const JobForm: React.FC<JobFormProps> = ({ funnelID }) => {
   const supabase = createClient();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -47,20 +51,15 @@ const JobForm = () => {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // TODO: consider passing USER from parent component istead of checking again?
-    const user = (await supabase.auth.getUser()).data.user?.id;
-
-    if (!user) {
-      console.error("User is not logged in");
-      return;
-    }
-
     const { data, error } = await supabase
       .from("jobs") // Specify the table name
       .insert([
         {
-          funnel: values.name, // Specify the values to insert
-          user_id: user, // Insert the user ID
+          funnel_id: funnelID,
+          name: values.name,
+          step: values.step,
+          date: values.date,
+          notes: values.notes,
         },
       ]);
 
@@ -74,7 +73,7 @@ const JobForm = () => {
   }
 
   return (
-    <Card className="   ">
+    <Card>
       <CardContent>
         <Form {...form}>
           <form

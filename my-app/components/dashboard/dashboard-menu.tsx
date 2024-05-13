@@ -6,6 +6,7 @@ import Link from "next/link";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -29,15 +30,21 @@ const formSchema = z.object({
 interface Funnel {
   id: number;
   funnel: string;
-  // Add other properties here...
 }
 
 interface DashMenuProps {
   setSheet: (sheet: string) => void;
+  setFunnelID: (id: number) => void;
   sheet: string;
+  user: User;
 }
 
-const DashMenu: React.FC<DashMenuProps> = ({ setSheet, sheet }) => {
+const DashMenu: React.FC<DashMenuProps> = ({
+  setSheet,
+  setFunnelID,
+  sheet,
+  user,
+}) => {
   const [funnels, setFunnels] = useState<Funnel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -51,21 +58,13 @@ const DashMenu: React.FC<DashMenuProps> = ({ setSheet, sheet }) => {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const user = (await supabase.auth.getUser()).data.user?.id;
-
-    if (!user) {
-      console.error("User is not logged in");
-      return;
-    }
-
     console.log(user);
-
     const { data, error } = await supabase
       .from("funnels") // Specify the table name
       .insert([
         {
           funnel: values.funnel, // Specify the values to insert
-          user_id: user, // Insert the user ID
+          user_id: user.id, // Insert the user ID
         },
       ]);
 
@@ -174,7 +173,10 @@ const DashMenu: React.FC<DashMenuProps> = ({ setSheet, sheet }) => {
             <Link
               key={funnel.id}
               href="#"
-              onClick={() => setSheet(funnel.funnel)}
+              onClick={() => {
+                setSheet(funnel.funnel);
+                setFunnelID(funnel.id);
+              }}
               className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
                 sheet === funnel.funnel
                   ? "text-primary"

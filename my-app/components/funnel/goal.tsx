@@ -9,7 +9,7 @@ import {
 
 const Goal = () => {
   return (
-    <Card className="">
+    <Card>
       <CardHeader>
         <CardTitle>Goals</CardTitle>
         <CardDescription>goal progressions</CardDescription>

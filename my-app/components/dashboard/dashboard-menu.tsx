@@ -58,7 +58,6 @@ const DashMenu: React.FC<DashMenuProps> = ({
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(user);
     const { data, error } = await supabase
       .from("funnels") // Specify the table name
       .insert([

@@ -3,6 +3,7 @@ import { createClient } from "@/utils/supabase/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "../ui/button";
@@ -38,13 +39,15 @@ interface JobFormProps {
 }
 
 const JobForm: React.FC<JobFormProps> = ({ funnelID }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
   const supabase = createClient();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      step: "",
+      step: "applied",
       date: new Date(),
       notes: "",
     },
@@ -127,10 +130,14 @@ const JobForm: React.FC<JobFormProps> = ({ funnelID }) => {
                 <FormItem>
                   <FormLabel>Date of application</FormLabel>
 
-                  <Popover>
+                  <Popover
+                    open={isOpen}
+                    onOpenChange={() => setIsOpen(!isOpen)}
+                  >
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
+                          onClick={() => setIsOpen(true)}
                           variant={"outline"}
                           className={cn(
                             "w-full pl-3 text-left font-normal",
@@ -150,7 +157,10 @@ const JobForm: React.FC<JobFormProps> = ({ funnelID }) => {
                       <Calendar
                         mode="single"
                         selected={field.value}
-                        onSelect={field.onChange}
+                        onSelect={(date) => {
+                          field.onChange(date);
+                          setIsOpen(false);
+                        }}
                         disabled={(date) =>
                           date > new Date() || date < new Date("1900-01-01")
                         }
